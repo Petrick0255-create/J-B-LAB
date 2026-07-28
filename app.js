@@ -36,7 +36,7 @@ const portfolioData = [
     title: "STUDY",
     description: "Notes, tools and experiments for continuous learning.",
     items: [
-      { name: "PHYSICS", url: "" },
+      { name: "PHYSICS", url: "https://petrick0255-create.github.io/study-note-physics/" },
       { name: "MATH", url: "" },
       { name: "COMPUTING", url: "" },
       { name: "ENGLISH", url: "" }
