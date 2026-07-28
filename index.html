@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="J&B LAB portfolio and personal archive">
+  <title>J&B LAB</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="accessScreen" class="access-screen">
+    <header class="access-header">
+      <strong>J&amp;B LAB</strong>
+      <span>PRIVATE INDEX</span>
+    </header>
+
+    <section class="access-panel" aria-labelledby="accessTitle">
+      <p class="eyebrow">ACCESS REQUIRED</p>
+      <h1 id="accessTitle">Selected works,<br>carefully archived.</h1>
+      <p class="access-copy">작업과 기록을 한곳에 모은 개인 포트폴리오입니다.</p>
+
+      <form id="accessForm" class="access-form">
+        <label for="password">PASSWORD</label>
+        <div class="password-row">
+          <input id="password" type="password" inputmode="numeric"
+                 autocomplete="current-password" autofocus>
+          <button type="submit">ENTER <span aria-hidden="true">↗</span></button>
+        </div>
+        <label class="remember-option">
+          <input id="remember" type="checkbox">
+          <span class="checkbox-mark" aria-hidden="true"></span>
+          오늘 하루 비밀번호 입력 없이 사용하기
+        </label>
+        <p id="errorMessage" class="form-message" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <footer class="access-footer">
+      <span>SEOUL, KR</span>
+      <span>EST. 2026</span>
+    </footer>
+  </main>
+
+  <main id="portfolio" class="portfolio-shell" hidden>
+    <header class="site-header">
+      <a class="wordmark" href="#top" aria-label="J&B LAB 홈">J&amp;B LAB</a>
+      <nav id="mainNav" class="main-nav" aria-label="포트폴리오 분류"></nav>
+      <span class="header-status"><i></i> ARCHIVE OPEN</span>
+    </header>
+
+    <section id="top" class="hero">
+      <div class="hero-meta">
+        <span>PORTFOLIO / PERSONAL ARCHIVE</span>
+        <span>2026 — PRESENT</span>
+      </div>
+      <div class="hero-heading">
+        <p>Ideas shaped into</p>
+        <h1>WORKS &amp;<br>RECORDS.</h1>
+      </div>
+      <div class="hero-bottom">
+        <p>Science, technology, daily practice and faith.<br>
+           A growing index of things I build and learn.</p>
+        <a href="#index">VIEW INDEX <span aria-hidden="true">↓</span></a>
+      </div>
+    </section>
+
+    <section id="index" class="index-section">
+      <div class="section-heading">
+        <p>SELECTED INDEX</p>
+        <p id="categoryTotal"></p>
+      </div>
+      <div id="categoryList" class="category-list"></div>
+    </section>
+
+    <footer class="site-footer">
+      <div>
+        <strong>J&amp;B LAB</strong>
+        <p>A private index for public-facing work.</p>
+      </div>
+      <div class="footer-meta">
+        <span>SEOUL, REPUBLIC OF KOREA</span>
+        <span>© 2026 J&amp;B LAB</span>
+      </div>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
