@@ -67,9 +67,10 @@ const accessForm = document.querySelector("#accessForm");
 const passwordInput = document.querySelector("#password");
 const rememberInput = document.querySelector("#remember");
 const errorMessage = document.querySelector("#errorMessage");
-const mainNav = document.querySelector("#mainNav");
+const bubbleField = document.querySelector("#bubbleField");
 const categoryList = document.querySelector("#categoryList");
 const categoryTotal = document.querySelector("#categoryTotal");
+const space = document.querySelector(".space");
 
 function escapeHtml(value) {
   return String(value)
@@ -84,47 +85,44 @@ function validUrl(url) {
   return /^https?:\/\//i.test(url);
 }
 
-function buildItem(item, mode) {
+function buildItem(item) {
   const name = escapeHtml(item.name);
 
   if (item.url && validUrl(item.url)) {
     return `
-      <a href="${escapeHtml(item.url)}" target="_blank" rel="noopener noreferrer">
+      <a class="bubble-link" href="${escapeHtml(item.url)}"
+         target="_blank" rel="noopener noreferrer">
         <span>${name}</span><span aria-hidden="true">↗</span>
       </a>
     `;
   }
 
-  if (mode === "dropdown") {
-    return `
-      <span class="pending-link">
-        <span>${name}</span><small>COMING SOON</small>
-      </span>
-    `;
-  }
-
-  return `<span>${name}</span>`;
+  return `
+    <span class="bubble-link pending-link">
+      <span>${name}</span><small>SOON</small>
+    </span>
+  `;
 }
 
 function renderPortfolio() {
+  bubbleField.innerHTML = portfolioData.map((section, index) => `
+    <article class="bubble bubble-${index + 1}">
+      <button class="bubble-trigger" type="button" aria-expanded="false">
+        <span class="bubble-number">0${index + 1}</span>
+        <strong>${escapeHtml(section.title)}</strong>
+        <span class="bubble-plus" aria-hidden="true">+</span>
+      </button>
+      <div class="bubble-content">
+        <p>${escapeHtml(section.description)}</p>
+        <div class="bubble-links">
+          ${section.items.map(item => buildItem(item)).join("")}
+        </div>
+      </div>
+    </article>
+  `).join("");
+
   categoryTotal.textContent =
     `${String(portfolioData.length).padStart(2, "0")} CATEGORIES`;
-
-  mainNav.innerHTML = portfolioData.map((section, index) => `
-    <div class="nav-group">
-      <button class="nav-trigger" type="button" aria-expanded="false">
-        ${escapeHtml(section.title)} <span aria-hidden="true">+</span>
-      </button>
-      <div class="dropdown">
-        <p>${String(index + 1).padStart(2, "0")} / INDEX</p>
-        <ul>
-          ${section.items.map(item =>
-            `<li>${buildItem(item, "dropdown")}</li>`
-          ).join("")}
-        </ul>
-      </div>
-    </div>
-  `).join("");
 
   categoryList.innerHTML = portfolioData.map((section, index) => {
     const liveCount = section.items.filter(item =>
@@ -133,15 +131,13 @@ function renderPortfolio() {
 
     return `
       <article class="category-row">
-        <span class="category-number">
-          ${String(index + 1).padStart(2, "0")}
-        </span>
+        <span class="category-number">0${index + 1}</span>
         <div class="category-title">
           <h2>${escapeHtml(section.title)}</h2>
           <p>${escapeHtml(section.description)}</p>
         </div>
         <div class="category-links">
-          ${section.items.map(item => buildItem(item, "list")).join("")}
+          ${section.items.map(item => buildItem(item)).join("")}
         </div>
         <span class="category-count">
           ${String(liveCount).padStart(2, "0")} LIVE
@@ -150,32 +146,76 @@ function renderPortfolio() {
     `;
   }).join("");
 
-  document.querySelectorAll(".nav-trigger").forEach(button => {
+  document.querySelectorAll(".bubble-trigger").forEach(button => {
     button.addEventListener("click", () => {
-      const group = button.closest(".nav-group");
-      const wasOpen = group.classList.contains("is-open");
+      const bubble = button.closest(".bubble");
+      const wasOpen = bubble.classList.contains("is-open");
 
-      document.querySelectorAll(".nav-group").forEach(other => {
+      document.querySelectorAll(".bubble").forEach(other => {
         other.classList.remove("is-open");
-        other.querySelector(".nav-trigger").setAttribute("aria-expanded", "false");
+        other.querySelector(".bubble-trigger")
+          .setAttribute("aria-expanded", "false");
       });
 
       if (!wasOpen) {
-        group.classList.add("is-open");
+        bubble.classList.add("is-open");
         button.setAttribute("aria-expanded", "true");
       }
     });
   });
 
   document.addEventListener("click", event => {
-    if (!event.target.closest(".nav-group")) {
-      document.querySelectorAll(".nav-group").forEach(group => {
-        group.classList.remove("is-open");
-        group.querySelector(".nav-trigger").setAttribute("aria-expanded", "false");
+    if (!event.target.closest(".bubble")) {
+      document.querySelectorAll(".bubble").forEach(bubble => {
+        bubble.classList.remove("is-open");
+        bubble.querySelector(".bubble-trigger")
+          .setAttribute("aria-expanded", "false");
       });
     }
   });
 }
+
+let dragStartY = null;
+let dragDistance = 0;
+
+space.addEventListener("pointerdown", event => {
+  if (event.target.closest(".bubble") || event.target.closest("a")) return;
+  dragStartY = event.clientY;
+  dragDistance = 0;
+  space.classList.add("is-dragging");
+  space.setPointerCapture(event.pointerId);
+});
+
+space.addEventListener("pointermove", event => {
+  if (dragStartY === null) return;
+  dragDistance = dragStartY - event.clientY;
+  if (dragDistance > 0) {
+    space.style.setProperty("--drag-progress",
+      String(Math.min(dragDistance / 220, 1)));
+  }
+});
+
+function finishDrag(event) {
+  if (dragStartY === null) return;
+  space.classList.remove("is-dragging");
+  space.style.removeProperty("--drag-progress");
+
+  if (dragDistance > 110) {
+    document.querySelector("#index").scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    });
+  }
+
+  dragStartY = null;
+  dragDistance = 0;
+  if (space.hasPointerCapture(event.pointerId)) {
+    space.releasePointerCapture(event.pointerId);
+  }
+}
+
+space.addEventListener("pointerup", finishDrag);
+space.addEventListener("pointercancel", finishDrag);
 
 function unlockPortfolio() {
   accessScreen.hidden = true;
