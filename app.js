@@ -27,9 +27,9 @@ const portfolioData = [
     title: "JOY",
     description: "Things made for the simple pleasure of making.",
     items: [
-      { name: "베이킹", url: "" },
-      { name: "뜨개질", url: "" },
-      { name: "러닝", url: "" }
+      { name: "BAKING", url: "" },
+      { name: "KNITTING", url: "" },
+      { name: "RUNNING", url: "" }
     ]
   },
   {
@@ -106,7 +106,7 @@ function buildItem(item) {
 
 function renderPortfolio() {
   bubbleField.innerHTML = portfolioData.map((section, index) => `
-    <article class="bubble bubble-${index + 1}">
+    <article class="bubble bubble-${index + 1}" style="--expanded-size: ${Math.max(450, 330 + section.items.length * 50)}px">
       <button class="bubble-trigger" type="button" aria-expanded="false">
         <span class="bubble-number">0${index + 1}</span>
         <strong>${escapeHtml(section.title)}</strong>
@@ -164,6 +164,26 @@ function renderPortfolio() {
     });
   });
 
+  document.querySelectorAll(".bubble").forEach((bubble, index) => {
+    bubble.addEventListener("mouseenter", () => {
+      bubbleField.dataset.active = String(index + 1);
+    });
+    bubble.addEventListener("mouseleave", () => {
+      if (!bubble.classList.contains("is-open")) {
+        delete bubbleField.dataset.active;
+      }
+    });
+    bubble.addEventListener("focusin", () => {
+      bubbleField.dataset.active = String(index + 1);
+    });
+    bubble.addEventListener("focusout", event => {
+      if (!bubble.contains(event.relatedTarget) &&
+          !bubble.classList.contains("is-open")) {
+        delete bubbleField.dataset.active;
+      }
+    });
+  });
+
   document.addEventListener("click", event => {
     if (!event.target.closest(".bubble")) {
       document.querySelectorAll(".bubble").forEach(bubble => {
@@ -171,6 +191,7 @@ function renderPortfolio() {
         bubble.querySelector(".bubble-trigger")
           .setAttribute("aria-expanded", "false");
       });
+      delete bubbleField.dataset.active;
     }
   });
 }
