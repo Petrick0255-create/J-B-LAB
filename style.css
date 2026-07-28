@@ -634,3 +634,10 @@ a.bubble-link:hover { padding: 0 8px; background: var(--black); color: var(--whi
     transition-duration: .01ms !important;
   }
 }
+
+.wordmark img {
+  display: block;
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+}
