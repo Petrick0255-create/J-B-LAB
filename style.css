@@ -686,3 +686,152 @@ a.bubble-link:hover { padding: 0 8px; background: var(--black); color: var(--whi
   height: 72px;
   object-fit: contain;
 }
+
+/* 모바일: 2×2 원형 메뉴 + 선택한 원만 중앙 확대 */
+@media (max-width: 560px) {
+  .space {
+    min-height: max(760px, 100svh);
+    overflow: hidden;
+  }
+
+  .space-meta {
+    top: 18px;
+    left: 18px;
+    right: 18px;
+  }
+
+  .wordmark img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .title-panel {
+    top: 92px;
+    left: 20px;
+    width: calc(100% - 40px);
+  }
+
+  .title-panel > p {
+    font-size: 15px;
+  }
+
+  .title-panel h1 {
+    font-size: clamp(45px, 13vw, 60px);
+    line-height: .82;
+  }
+
+  .title-note {
+    display: none;
+  }
+
+  .bubble-field {
+    top: 315px;
+    bottom: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(2, 142px);
+    gap: 14px;
+    height: 298px;
+    padding: 0 18px;
+    align-content: start;
+  }
+
+  .bubble {
+    position: relative;
+    inset: auto;
+    width: 136px;
+    height: 136px;
+    margin: auto;
+    transform: none;
+    transition:
+      width .45s cubic-bezier(.18,.82,.2,1),
+      height .45s cubic-bezier(.18,.82,.2,1),
+      left .45s cubic-bezier(.18,.82,.2,1),
+      top .45s cubic-bezier(.18,.82,.2,1),
+      opacity .3s ease,
+      transform .45s cubic-bezier(.18,.82,.2,1);
+  }
+
+  .bubble:hover,
+  .bubble:focus-within {
+    width: 136px;
+    height: 136px;
+  }
+
+  .bubble.is-open {
+    position: absolute;
+    z-index: 40;
+    left: 50%;
+    top: 50%;
+    width: min(88vw, 340px);
+    height: min(88vw, 340px);
+    margin: 0;
+    transform: translate(-50%, -50%) !important;
+  }
+
+  .bubble-field[data-active] .bubble:not(.is-open) {
+    opacity: .16;
+    pointer-events: none;
+    transform: scale(.84);
+  }
+
+  .bubble-trigger strong {
+    font-size: 19px;
+  }
+
+  .bubble:hover .bubble-trigger strong,
+  .bubble:focus-within .bubble-trigger strong {
+    transform: none;
+  }
+
+  .bubble.is-open .bubble-trigger strong {
+    transform: translateY(-92px);
+  }
+
+  .bubble-content {
+    top: 49%;
+    width: 72%;
+    max-height: 174px;
+    padding-right: 7px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+    transform: translate(-50%, -5%);
+  }
+
+  .bubble:hover .bubble-content,
+  .bubble:focus-within .bubble-content {
+    opacity: 0;
+    transform: translate(-50%, -5%);
+    visibility: hidden;
+  }
+
+  .bubble.is-open .bubble-content {
+    opacity: 1;
+    transform: translate(-50%, -2%);
+    visibility: visible;
+  }
+
+  .bubble.is-open .bubble-plus {
+    transform: rotate(45deg);
+  }
+
+  .bubble-content > p {
+    margin-bottom: 9px;
+    font-size: 10px;
+    line-height: 1.35;
+  }
+
+  .bubble-link {
+    min-height: 41px;
+    font-size: 13px;
+  }
+
+  .space-footer {
+    bottom: 18px;
+    left: 18px;
+    right: 18px;
+  }
+}

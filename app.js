@@ -153,13 +153,17 @@ function renderPortfolio() {
 
       document.querySelectorAll(".bubble").forEach(other => {
         other.classList.remove("is-open");
-        other.querySelector(".bubble-trigger")
-          .setAttribute("aria-expanded", "false");
+        const otherTrigger = other.querySelector(".bubble-trigger");
+        otherTrigger.setAttribute("aria-expanded", "false");
+        if (other !== bubble) otherTrigger.blur();
       });
 
       if (!wasOpen) {
         bubble.classList.add("is-open");
         button.setAttribute("aria-expanded", "true");
+      } else {
+        button.blur();
+        delete bubbleField.dataset.active;
       }
     });
   });
@@ -188,8 +192,9 @@ function renderPortfolio() {
     if (!event.target.closest(".bubble")) {
       document.querySelectorAll(".bubble").forEach(bubble => {
         bubble.classList.remove("is-open");
-        bubble.querySelector(".bubble-trigger")
-          .setAttribute("aria-expanded", "false");
+        const trigger = bubble.querySelector(".bubble-trigger");
+        trigger.setAttribute("aria-expanded", "false");
+        trigger.blur();
       });
       delete bubbleField.dataset.active;
     }
