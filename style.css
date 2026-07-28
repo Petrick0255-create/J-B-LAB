@@ -785,32 +785,31 @@ a.bubble-link:hover { padding: 0 8px; background: var(--black); color: var(--whi
   }
 
   .bubble.is-open .bubble-trigger strong {
-    transform: translateY(-92px);
+    top: 43px;
+    font-size: 16px;
+    letter-spacing: .08em;
+    transform: none;
   }
 
   .bubble-content {
-    top: 49%;
-    width: 72%;
-    max-height: 174px;
-    padding-right: 7px;
-    overflow-x: hidden;
-    overflow-y: auto;
-    overscroll-behavior: contain;
-    -webkit-overflow-scrolling: touch;
-    touch-action: pan-y;
-    transform: translate(-50%, -5%);
+    top: 95px;
+    width: 70%;
+    max-height: none;
+    padding-right: 0;
+    overflow: visible;
+    transform: translateX(-50%);
   }
 
   .bubble:hover .bubble-content,
   .bubble:focus-within .bubble-content {
     opacity: 0;
-    transform: translate(-50%, -5%);
+    transform: translateX(-50%);
     visibility: hidden;
   }
 
   .bubble.is-open .bubble-content {
     opacity: 1;
-    transform: translate(-50%, -2%);
+    transform: translateX(-50%);
     visibility: visible;
   }
 
@@ -819,9 +818,19 @@ a.bubble-link:hover { padding: 0 8px; background: var(--black); color: var(--whi
   }
 
   .bubble-content > p {
-    margin-bottom: 9px;
+    margin-bottom: 10px;
     font-size: 10px;
     line-height: 1.35;
+  }
+
+  .bubble-links {
+    max-height: 123px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
   }
 
   .bubble-link {
