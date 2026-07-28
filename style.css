@@ -203,7 +203,7 @@ a { color: inherit; text-decoration: none; }
   z-index: 2;
   left: 3vw;
   top: 50%;
-  width: 52vw;
+  width: 36vw;
   transform: translateY(-48%);
   pointer-events: none;
 }
@@ -213,7 +213,7 @@ a { color: inherit; text-decoration: none; }
 }
 .title-panel h1 {
   margin: 0;
-  font-size: clamp(72px, 11.5vw, 177px);
+  font-size: clamp(62px, 8vw, 124px);
   font-weight: 700;
   line-height: .77;
   letter-spacing: -.09em;
@@ -399,6 +399,14 @@ a { color: inherit; text-decoration: none; }
   transform: translate(-50%, -20%);
   visibility: hidden;
   transition: opacity .25s .15s, transform .4s .1s;
+  scrollbar-width: thin;
+  scrollbar-color: #777 transparent;
+}
+.bubble-content::-webkit-scrollbar { width: 3px; }
+.bubble-content::-webkit-scrollbar-track { background: transparent; }
+.bubble-content::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #777;
 }
 .bubble:hover .bubble-content,
 .bubble:focus-within .bubble-content,
@@ -549,7 +557,10 @@ a.bubble-link:hover { padding: 0 8px; background: var(--black); color: var(--whi
     width: calc(100% - 44px);
     transform: none;
   }
-  .title-panel h1 { font-size: clamp(67px, 17vw, 140px); }
+  .title-panel {
+    width: min(72vw, 610px);
+  }
+  .title-panel h1 { font-size: clamp(60px, 14vw, 108px); }
   .bubble-field {
     top: 470px;
     bottom: 60px;
@@ -570,6 +581,15 @@ a.bubble-link:hover { padding: 0 8px; background: var(--black); color: var(--whi
     width: min(48vw, 330px);
     height: min(48vw, 330px);
   }
+  .bubble-content {
+    max-height: 180px;
+    padding-right: 7px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-y;
+  }
   .bubble:hover .bubble-trigger strong,
   .bubble:focus-within .bubble-trigger strong,
   .bubble.is-open .bubble-trigger strong { transform: translateY(-70px); }
@@ -587,16 +607,21 @@ a.bubble-link:hover { padding: 0 8px; background: var(--black); color: var(--whi
   .access-header span:last-child, .access-footer span:last-child { display: none; }
   .access-panel h1 { font-size: clamp(45px, 14vw, 70px); }
   .access-copy { margin: 25px 0 48px; }
-  .space { min-height: 1100px; }
+  .space { min-height: 1720px; }
   .space-meta span { display: none; }
   .title-panel { top: 125px; }
-  .title-panel h1 { font-size: 20vw; }
+  .title-panel {
+    width: calc(100% - 44px);
+  }
+  .title-panel h1 { font-size: clamp(50px, 15.5vw, 70px); }
   .title-note { display: block; margin-top: 25px; }
   .title-note p { margin-top: 12px; }
   .bubble-field {
-    top: 400px;
+    top: 390px;
     grid-template-columns: 1fr;
     gap: 14px;
+    grid-auto-rows: 300px;
+    align-content: start;
   }
   .bubble {
     width: 190px;
@@ -605,6 +630,26 @@ a.bubble-link:hover { padding: 0 8px; background: var(--black); color: var(--whi
   .bubble:hover, .bubble:focus-within, .bubble.is-open {
     width: 280px;
     height: 280px;
+  }
+  .bubble-content {
+    top: 46%;
+    width: 74%;
+    max-height: 150px;
+    padding-right: 8px;
+    transform: translate(-50%, -8%);
+  }
+  .bubble:hover .bubble-content,
+  .bubble:focus-within .bubble-content,
+  .bubble.is-open .bubble-content {
+    transform: translate(-50%, -4%);
+  }
+  .bubble-content > p {
+    margin-bottom: 10px;
+    font-size: 10px;
+  }
+  .bubble-link {
+    min-height: 39px;
+    font-size: 13px;
   }
   .space-footer span:first-child { display: none; }
   .space-footer { justify-content: flex-end; }
