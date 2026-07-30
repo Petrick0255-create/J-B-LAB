@@ -16,7 +16,7 @@ const portfolioData = [
     description: "Professional projects and selected works.",
     items: [
       { name: "Weizmann", url: "" },
-      { name: "HAYON", url: "" },
+      { name: "HAYON", url: "https://petrick0255-create.github.io/experiment/index.html" },
       {
         name: "BBH company",
         url: "https://science-lab1.parkjunbum0255.workers.dev/"
