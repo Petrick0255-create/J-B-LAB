@@ -6,9 +6,37 @@
  * 2. 링크 추가: 원하는 항목의 url: "" 안에 주소를 넣으세요.
  * 3. 항목 추가: { name: "새 항목", url: "https://..." }를 추가하세요.
  * 4. url을 비워두면 COMING SOON 상태로 표시됩니다.
+ * 5. 우측 바로가기 추가: quickLinkData에
+ *    { name: "이름", url: "https://..." } 한 줄을 추가하세요.
  */
 
 const PASSWORD = "0000";
+
+/*
+ * 우측 바로가기 배너 수정 영역
+ * 아래 배열에 같은 형식으로 한 줄을 추가하면 배너가 자동 생성됩니다.
+ * mark는 생략해도 되며, 생략하면 이름의 앞 두 글자가 표시됩니다.
+ */
+const quickLinkData = [
+  { name: "Chat GPT", mark: "AI", url: "https://chatgpt.com/" },
+  {
+    name: "구글 드라이브",
+    mark: "GD",
+    url: "https://drive.google.com/drive/my-drive?hl=ko"
+  },
+  {
+    name: "스프레드 시트",
+    mark: "GS",
+    url: "https://docs.google.com/spreadsheets/u/0/"
+  },
+  { name: "Github", mark: "GH", url: "https://github.com/" },
+  {
+    name: "네이버",
+    mark: "N",
+    url: "https://www.naver.com/"
+  },
+
+];
 
 const portfolioData = [
   {
@@ -71,6 +99,7 @@ const bubbleField = document.querySelector("#bubbleField");
 const categoryList = document.querySelector("#categoryList");
 const categoryTotal = document.querySelector("#categoryTotal");
 const space = document.querySelector(".space");
+const quickLinks = document.querySelector("#quickLinks");
 
 function escapeHtml(value) {
   return String(value)
@@ -102,6 +131,32 @@ function buildItem(item) {
       <span>${name}</span><small>SOON</small>
     </span>
   `;
+}
+
+function makeQuickLinkMark(item) {
+  const customMark = String(item.mark || "").trim();
+  if (customMark) return customMark.slice(0, 3).toUpperCase();
+
+  return String(item.name || "")
+    .replace(/\s+/g, "")
+    .slice(0, 2)
+    .toUpperCase();
+}
+
+function renderQuickLinks() {
+  quickLinks.innerHTML = quickLinkData
+    .filter(item => item.name && validUrl(item.url))
+    .map((item, index) => `
+      <a class="quick-link" href="${escapeHtml(item.url)}"
+         target="_blank" rel="noopener noreferrer"
+         aria-label="${escapeHtml(item.name)} 새 탭에서 열기">
+        <span class="quick-link-number">${String(index + 1).padStart(2, "0")}</span>
+        <strong class="quick-link-mark" aria-hidden="true">${escapeHtml(makeQuickLinkMark(item))}</strong>
+        <span class="quick-link-name">${escapeHtml(item.name)}</span>
+        <span class="quick-link-arrow" aria-hidden="true">↗</span>
+      </a>
+    `)
+    .join("");
 }
 
 function renderPortfolio() {
@@ -278,6 +333,7 @@ passwordInput.addEventListener("input", () => {
   errorMessage.textContent = "";
 });
 
+renderQuickLinks();
 renderPortfolio();
 
 if (hasValidAccess()) {
