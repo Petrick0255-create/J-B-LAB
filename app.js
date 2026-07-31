@@ -92,7 +92,6 @@ function applyAuthState(state = {}) {
   const ready = Boolean(state.ready);
   isOwnerAuthenticated = Boolean(state.isOwner);
 
-  portfolio.inert = !isOwnerAuthenticated;
   portfolio.classList.toggle("is-locked", !isOwnerAuthenticated);
   portfolio.setAttribute("aria-disabled", String(!isOwnerAuthenticated));
   document.body.classList.toggle("is-authenticated", isOwnerAuthenticated);
@@ -106,11 +105,14 @@ function applyAuthState(state = {}) {
       : "Google 로그인 상태를 확인하고 있습니다."
   );
   authButton.textContent = isOwnerAuthenticated
-    ? "로그아웃"
-    : ready
-      ? "Google 로그인"
-      : "확인 중";
-  authButton.disabled = !ready;
+    ? "✓"
+    : "G";
+  authButton.setAttribute(
+    "aria-label",
+    isOwnerAuthenticated ? "로그아웃" : "Google 로그인"
+  );
+  authButton.title = isOwnerAuthenticated ? "로그아웃" : "Google 로그인";
+  authButton.disabled = false;
   authGate.classList.toggle("is-signed-in", isOwnerAuthenticated);
 }
 
@@ -121,10 +123,30 @@ window.addEventListener("jnb-auth-change", event => {
 authButton.addEventListener("click", () => {
   if (isOwnerAuthenticated) {
     window.jnbAuth?.signOut();
-  } else {
+  } else if (window.jnbAuth) {
     window.jnbAuth?.signIn();
+  } else {
+    authMessage.textContent = "Firebase 로그인을 불러오는 중입니다.";
   }
 });
+
+document.addEventListener("click", event => {
+  if (isOwnerAuthenticated || event.target.closest("#authGate")) {
+    return;
+  }
+
+  const clickedControl = event.target.closest("a, button");
+  if (!clickedControl) {
+    return;
+  }
+
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  authMessage.textContent = "Google 로그인 후 클릭할 수 있습니다.";
+  authGate.classList.remove("needs-attention");
+  requestAnimationFrame(() => authGate.classList.add("needs-attention"));
+  authButton.focus();
+}, true);
 
 function escapeHtml(value) {
   return String(value)
@@ -174,6 +196,7 @@ function renderQuickLinks() {
     .map((item, index) => `
       <a class="quick-link" href="${escapeHtml(item.url)}"
          target="_blank" rel="noopener noreferrer"
+         title="${escapeHtml(item.name)}"
          aria-label="${escapeHtml(item.name)} 새 탭에서 열기">
         <span class="quick-link-number">${String(index + 1).padStart(2, "0")}</span>
         <strong class="quick-link-mark" aria-hidden="true">${escapeHtml(makeQuickLinkMark(item))}</strong>
