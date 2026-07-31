@@ -2,15 +2,12 @@
  * =========================================================
  * J&B LAB 수정 영역
  * =========================================================
- * 1. 비밀번호 변경: PASSWORD의 "0000"을 수정하세요.
- * 2. 링크 추가: 원하는 항목의 url: "" 안에 주소를 넣으세요.
- * 3. 항목 추가: { name: "새 항목", url: "https://..." }를 추가하세요.
- * 4. url을 비워두면 COMING SOON 상태로 표시됩니다.
- * 5. 우측 바로가기 추가: quickLinkData에
+ * 1. 링크 추가: 원하는 항목의 url: "" 안에 주소를 넣으세요.
+ * 2. 항목 추가: { name: "새 항목", url: "https://..." }를 추가하세요.
+ * 3. url을 비워두면 COMING SOON 상태로 표시됩니다.
+ * 4. 우측 바로가기 추가: quickLinkData에
  *    { name: "이름", url: "https://..." } 한 줄을 추가하세요.
  */
-
-const PASSWORD = "0000";
 
 /*
  * 우측 바로가기 배너 수정 영역
@@ -29,13 +26,7 @@ const quickLinkData = [
     mark: "GS",
     url: "https://docs.google.com/spreadsheets/u/0/"
   },
-  { name: "Github", mark: "GH", url: "https://github.com/" },
-  {
-    name: "네이버",
-    mark: "N",
-    url: "https://www.naver.com/"
-  },
-
+  { name: "Github", mark: "GH", url: "https://github.com/" }
 ];
 
 const portfolioData = [
@@ -85,21 +76,55 @@ const portfolioData = [
 
 /* 아래부터는 기능 코드입니다. 일반적인 링크 수정 시 건드릴 필요가 없습니다. */
 
-const AUTH_KEY = "jnb-lab-access-until";
-const SESSION_KEY = "jnb-lab-session";
-const ONE_DAY = 24 * 60 * 60 * 1000;
-
-const accessScreen = document.querySelector("#accessScreen");
 const portfolio = document.querySelector("#portfolio");
-const accessForm = document.querySelector("#accessForm");
-const passwordInput = document.querySelector("#password");
-const rememberInput = document.querySelector("#remember");
-const errorMessage = document.querySelector("#errorMessage");
+const authGate = document.querySelector("#authGate");
+const authTitle = document.querySelector("#authTitle");
+const authMessage = document.querySelector("#authMessage");
+const authButton = document.querySelector("#authButton");
 const bubbleField = document.querySelector("#bubbleField");
 const categoryList = document.querySelector("#categoryList");
 const categoryTotal = document.querySelector("#categoryTotal");
 const space = document.querySelector(".space");
 const quickLinks = document.querySelector("#quickLinks");
+let isOwnerAuthenticated = false;
+
+function applyAuthState(state = {}) {
+  const ready = Boolean(state.ready);
+  isOwnerAuthenticated = Boolean(state.isOwner);
+
+  portfolio.inert = !isOwnerAuthenticated;
+  portfolio.classList.toggle("is-locked", !isOwnerAuthenticated);
+  portfolio.setAttribute("aria-disabled", String(!isOwnerAuthenticated));
+  document.body.classList.toggle("is-authenticated", isOwnerAuthenticated);
+
+  authTitle.textContent = isOwnerAuthenticated
+    ? "OWNER ACCESS"
+    : "LOGIN REQUIRED";
+  authMessage.textContent = state.message || (
+    ready
+      ? "본인 Google 계정으로 로그인해야 모든 기능을 사용할 수 있습니다."
+      : "Google 로그인 상태를 확인하고 있습니다."
+  );
+  authButton.textContent = isOwnerAuthenticated
+    ? "로그아웃"
+    : ready
+      ? "Google 로그인"
+      : "확인 중";
+  authButton.disabled = !ready;
+  authGate.classList.toggle("is-signed-in", isOwnerAuthenticated);
+}
+
+window.addEventListener("jnb-auth-change", event => {
+  applyAuthState(event.detail);
+});
+
+authButton.addEventListener("click", () => {
+  if (isOwnerAuthenticated) {
+    window.jnbAuth?.signOut();
+  } else {
+    window.jnbAuth?.signIn();
+  }
+});
 
 function escapeHtml(value) {
   return String(value)
@@ -298,44 +323,6 @@ function finishDrag(event) {
 space.addEventListener("pointerup", finishDrag);
 space.addEventListener("pointercancel", finishDrag);
 
-function unlockPortfolio() {
-  accessScreen.hidden = true;
-  portfolio.hidden = false;
-}
-
-function hasValidAccess() {
-  const accessUntil = Number(localStorage.getItem(AUTH_KEY) || 0);
-  const sessionActive = sessionStorage.getItem(SESSION_KEY) === "active";
-  return accessUntil > Date.now() || sessionActive;
-}
-
-accessForm.addEventListener("submit", event => {
-  event.preventDefault();
-
-  if (passwordInput.value !== PASSWORD) {
-    errorMessage.textContent = "비밀번호가 일치하지 않습니다.";
-    passwordInput.value = "";
-    passwordInput.focus();
-    return;
-  }
-
-  if (rememberInput.checked) {
-    localStorage.setItem(AUTH_KEY, String(Date.now() + ONE_DAY));
-  } else {
-    sessionStorage.setItem(SESSION_KEY, "active");
-  }
-
-  errorMessage.textContent = "";
-  unlockPortfolio();
-});
-
-passwordInput.addEventListener("input", () => {
-  errorMessage.textContent = "";
-});
-
 renderQuickLinks();
 renderPortfolio();
-
-if (hasValidAccess()) {
-  unlockPortfolio();
-}
+applyAuthState();

@@ -17,6 +17,75 @@ body {
 button, input { font: inherit; }
 a { color: inherit; text-decoration: none; }
 
+/* Firebase 소유자 로그인 */
+.auth-gate {
+  position: fixed;
+  z-index: 200;
+  top: 18px;
+  right: 18px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 14px;
+  width: min(390px, calc(100vw - 36px));
+  padding: 13px 13px 13px 16px;
+  background: #090909ed;
+  border: 1px solid #ffffff24;
+  border-radius: 14px;
+  color: var(--white);
+  box-shadow: 0 14px 40px #0000003d;
+  backdrop-filter: blur(16px);
+}
+
+.auth-gate strong {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 9px;
+  letter-spacing: .16em;
+}
+
+.auth-gate p {
+  margin: 0;
+  color: #b7b7b0;
+  font-size: 10px;
+  line-height: 1.4;
+}
+
+.auth-gate button {
+  min-height: 38px;
+  padding: 0 13px;
+  border: 1px solid var(--white);
+  border-radius: 10px;
+  background: var(--white);
+  color: var(--black);
+  cursor: pointer;
+  font-size: 10px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.auth-gate button:disabled {
+  cursor: wait;
+  opacity: .55;
+}
+
+.auth-gate.is-signed-in {
+  background: #f6f6f2ed;
+  border-color: #ffffff;
+  color: var(--black);
+}
+
+.auth-gate.is-signed-in p { color: var(--muted); }
+.auth-gate.is-signed-in button {
+  background: var(--black);
+  color: var(--white);
+}
+
+.portfolio-shell.is-locked {
+  cursor: default;
+  pointer-events: none;
+}
+
 /* 우측 고정 바로가기 */
 .quick-links {
   position: fixed;
@@ -745,6 +814,16 @@ a.bubble-link:hover { padding: 0 8px; background: var(--black); color: var(--whi
 }
 
 @media (max-width: 560px) {
+  .auth-gate {
+    top: 10px;
+    right: 10px;
+    width: calc(100vw - 20px);
+  }
+
+  .auth-gate p {
+    max-width: 58vw;
+  }
+
   .access-screen { padding: 22px 20px; }
   .access-header span:last-child, .access-footer span:last-child { display: none; }
   .access-panel h1 { font-size: clamp(45px, 14vw, 70px); }

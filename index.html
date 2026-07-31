@@ -9,40 +9,15 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main id="accessScreen" class="access-screen">
-    <header class="access-header">
-      <strong>J&amp;B LAB</strong>
-      <span>PRIVATE INDEX</span>
-    </header>
+  <aside id="authGate" class="auth-gate" aria-live="polite">
+    <div>
+      <strong id="authTitle">LOGIN REQUIRED</strong>
+      <p id="authMessage">Google 로그인 상태를 확인하고 있습니다.</p>
+    </div>
+    <button id="authButton" type="button" disabled>확인 중</button>
+  </aside>
 
-    <section class="access-panel" aria-labelledby="accessTitle">
-      <p class="eyebrow">ACCESS REQUIRED</p>
-      <h1 id="accessTitle">Selected works,<br>carefully archived.</h1>
-      <p class="access-copy">작업과 기록을 한곳에 모은 개인 포트폴리오입니다.</p>
-
-      <form id="accessForm" class="access-form">
-        <label for="password">PASSWORD</label>
-        <div class="password-row">
-          <input id="password" type="password" inputmode="numeric"
-                 autocomplete="current-password" autofocus>
-          <button type="submit">ENTER <span aria-hidden="true">↗</span></button>
-        </div>
-        <label class="remember-option">
-          <input id="remember" type="checkbox">
-          <span class="checkbox-mark" aria-hidden="true"></span>
-          오늘 하루 비밀번호 입력 없이 사용하기
-        </label>
-        <p id="errorMessage" class="form-message" aria-live="polite"></p>
-      </form>
-    </section>
-
-    <footer class="access-footer">
-      <span>SEOUL, KR</span>
-      <span>EST. 2026</span>
-    </footer>
-  </main>
-
-  <main id="portfolio" class="portfolio-shell" hidden>
+  <main id="portfolio" class="portfolio-shell is-locked" aria-disabled="true" inert>
     <aside id="quickLinks" class="quick-links" aria-label="자주 사용하는 바로가기"></aside>
 
     <section class="space">
@@ -94,5 +69,6 @@
   </main>
 
   <script src="app.js"></script>
+  <script type="module" src="firebase.js"></script>
 </body>
 </html>
