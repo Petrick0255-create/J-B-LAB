@@ -26,7 +26,17 @@ const quickLinkData = [
     mark: "GS",
     url: "https://docs.google.com/spreadsheets/u/0/"
   },
-  { name: "Github", mark: "GH", url: "https://github.com/" }
+  {
+    name: "네이버",
+    mark: "N",
+    url: "https://www.naver.com/"
+  },
+  {
+    name: "구글",
+    mark: "G",
+    url: "https://www.google.com/webhp?hl=ko&sa=X&ved=0ahUKEwjh4827r4OWAxXKi68BHerXORoQPAgI"
+  },
+  { name: "Github", mark: "Git", url: "https://github.com/" }
 ];
 
 const portfolioData = [
